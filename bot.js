@@ -116,6 +116,14 @@ app.listen(PORT, () => {
 
 const commands = [
   {
+    name: 'ping',
+    description: 'responde com pong'
+  },
+  {
+    name: 'hello',
+    description: 'responde o seu hello'
+  },
+  {
     name: 'enquete',
     description: 'cria enquete',
     options: [
@@ -127,7 +135,7 @@ const commands = [
       },
       {
         name: 'respostas',
-        description: 'as... respostas',
+        description: 'as... respostas (separadas por ponto e vírgula/semicolon/; )',
         type: 3, //3 === STRING
         required: true,
       },
@@ -155,14 +163,17 @@ client.once('ready', async () => {
       { body: commands },
     )
 
-    console.log(' (/) comandos atualizado.')
+    console.log('comandos (/) atualizados.')
   } catch (error) {
-    console.error(error)
+    console.error('ERRORRRR :::::', error)
   }
 })
 
 client.on('interactionCreate', async (interaction) => {
   if (!interaction.isCommand()) return
+
+  // console.log('INICIO INTERACTION :::::', interaction)
+  // console.log(':::::: FIM INTERACTION ::::::::')
 
   const { commandName, options } = interaction
 
@@ -172,8 +183,11 @@ client.on('interactionCreate', async (interaction) => {
     await interaction.reply('Pong!')
   }
   else if (commandName === 'hello') {
-    await interaction.reply('Hello!')
+
+    await interaction.reply(`Hello, @${interaction.user.globalName}`)
   }
+
+  // @${ interaction.user.globalName }
 
   else if (commandName === 'enquete') {
     const questionOption = options.getString('pregunta')
@@ -188,7 +202,7 @@ client.on('interactionCreate', async (interaction) => {
       return
     }
 
-    const optionsArray = optionsOption.split(',').map((option) => option.trim())
+    const optionsArray = optionsOption.split(';').map((option) => option.trim())
     console.log('array de opções:', optionsArray)
 
     if (optionsArray.length < 2) {
@@ -198,7 +212,7 @@ client.on('interactionCreate', async (interaction) => {
     }
 
     const pollEmbed = {
-      color: 0x3498db,
+      color: 0xFF2400,
       title: questionOption,
       description: optionsArray.map((option, index) => `${index + 1}. ${option}`).join('\n'),
       footer: {

@@ -2,3 +2,6 @@ node_modules/
 .env
 .archive
 .prettierrc
+secrets/
+
+.DS_Store
