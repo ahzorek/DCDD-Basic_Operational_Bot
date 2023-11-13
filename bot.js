@@ -18,8 +18,8 @@ const client = new Client({
   ],
 });
 
-let accessToken = 'agCGUblRuXc0yzlsRhGS9b4MnNcgYB'
-let refreshToken = '3RhxEEkpDmROnIn2tFRvs0AzzUGhKU'
+let accessToken = process.env.ACCESS_TOKEN
+let refreshToken = process.env.REFRESH_TOKEN
 
 //volto nisso depois
 async function refreshAccessToken() {
@@ -159,7 +159,7 @@ client.once('ready', async () => {
   try {
     console.log('atualizando (/) comandos.')
     await rest.put(
-      Routes.applicationGuildCommands(client.user.id, '1172996430709919764'),
+      Routes.applicationGuildCommands(client.user.id, process.env.SERVER_ID),
       { body: commands },
     )
 
@@ -223,7 +223,7 @@ client.on('interactionCreate', async (interaction) => {
     try {
       const reply = await interaction.reply('Enquete sendo processada')
 
-      console.log('Poll Embed:', pollEmbed)
+      console.log('Embed:', pollEmbed)
 
       const pollMessage = await interaction.channel.send({ embeds: [pollEmbed] })
 
@@ -237,6 +237,7 @@ client.on('interactionCreate', async (interaction) => {
 
       await reply.delete()
       console.log("Resposta à interação e mensagem inicial excluídas com sucesso")
+
     } catch (error) {
       console.error("Erro ao responder à interação:", error)
     }
